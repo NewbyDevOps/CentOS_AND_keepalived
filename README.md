@@ -17,7 +17,6 @@
 Схема сети в упрощённом виде выглядит следующим образом:
 
 <image src="./images/scheme.jpg" alt="scheme">
-<br/><br/>
 
 **Application** - в роли приложения будет выступать бразузер хоста. На хосте будут запущены витуальные машины с серверами.
 
@@ -32,23 +31,22 @@
 Задаём настройки для виртуальной машины и простой пароль для удобства тестирования:
 
 <image src="./images/centos_install_1.jpg" alt="install">
-<br/><br/>
+
 <image src="./images/centos_install_2.jpg" alt="install">
-<br/><br/>
+
 <image src="./images/centos_install_3.jpg" alt="install">
-<br/><br/>
+
 <image src="./images/centos_install_4.jpg" alt="install">
-<br/><br/>
+
 Запускаем установку:
 
 В ходе установки выбираем опцию Server with GUI для удобства.
-<br/><br/>
+
 <image src="./images/centos_install_5.jpg" alt="install">
 
 Пока идёт установка системы, задаём root пароль и создаём основного пользователя. Пароль пользователя для удобства можно не задавать.
 
 <image src="./images/centos_install_6.jpg" alt="install">
-<br/><br/>
 
 Выполняем обновление системы до актуального состояния командой `yum update`. Если не обновиться, то не установятся корректно гостевые дополнения.
 
@@ -57,19 +55,19 @@
 И наконец, запускаем установку гостевых дополнений через меню виртуальной машины:
 
 <image src="./images/centos_install_7.jpg" alt="install">
-<br/><br/>
+
 После установки, диск с гостевыми дополнениями можно извлечь.  
 Выключаем виртуальную машину, идём в настройки сети и включаем `Виртуальный адаптер хоста` в качестве типа подключения.
-<br/><br/>
+
 <image src="./images/centos_install_8.jpg" alt="install">
-<br/><br/>
+
 Затем идём настраивать `Виртуальный адаптер хоста`. Его настройки можно найти в меню VirtualBox `Файл` -> `Инструменты` -> `Менеджер сетей`.  
 Адрес IPv4 адаптера устанавливается автоматически, но можно изменить чтобы удобно было запоминать. Я установил адрес `192.168.10.1`.
-<br/><br/>
+
 <image src="./images/centos_install_9.jpg" alt="install">
-<br/><br/>
+
 DHCP сервер выключаем.
-<br/><br/>
+
 <image src="./images/centos_install_10.jpg" alt="install">
 
 Запускаем виртальную машину. Теперь, после установки гостевых дополнений, можно нормально ресайзить окно машины и рабочий стол будет сам подстраиваться под размер окна. Так же можно включить двунаправленный буфер обмена и создать общую папку для обмена файлами с хостовой машиной.
@@ -92,12 +90,11 @@ DHCP сервер выключаем.
 
 <image src="./images/nginx_install_1.jpg" alt="install">
 
-<br/><br/>
 Далее разрешаем http и https трафик командами  
 `firewall-cmd --zone=public --permanent --add-service=http`  
 и  
 `firewall-cmd --zone=public --permanent --add-service=https`. 
-<br/><br/>
+
 Перезагружаем брандмауэр `firewall-cmd --reload`.
 
 #### 1.3 Устанавливаем keepalived.
@@ -115,19 +112,19 @@ DHCP сервер выключаем.
 Клонируем виртуальную машину. Создаём 2 новые машины с разными названиями. Я сделал `CetnOS_7(10)` и `CentOS_7(20)` с учётом последнего октета ip адресов, которые планирую задавать для организации внутренней сети между машинами. При этом, нужно обязательно указать опцию `Сгенерировать новые MAC-адреса всех сетевых адаптеров`.
 
 <image src="./images/config_clone_1.jpg" alt="clone">
-<br/><br/>
+
 <image src="./images/config_clone_2.jpg" alt="clone">
 
 Запускаем обе машины и идём в настройки сетевых адаптеров.
 
 Необходимо настроить второй адаптер (у меня он называется enp0s8) на обоих машинах.
-<br/><br/>
+
 <image src="./images/config_clone_3.jpg" alt="clone">
 
 Отключаем DHCP и прописываем статические IP адреса для каждой машины.
-<br/><br/>
+
 <image src="./images/config_clone_4.jpg" alt="clone">
-<br/><br/>
+
 <image src="./images/config_clone_5.jpg" alt="clone">
 
 Добавляем маркер в виде IP адреса машины на стартовую страницу nginx, чтобы понимать, какой сервер будет работать через виртуальный IP в данный момент.
@@ -135,11 +132,10 @@ DHCP сервер выключаем.
 Открываем файл `index.html` и добавляем IP куда-нибудь на видное место для обоих виртуальных машин (показано для одной).
 
 `nano /usr/share/nginx/html/index.html`
-<br/><br/>
+
 <image src="./images/config_clone_6.jpg" alt="clone">
 
 <image src="./images/config_clone_7.jpg" alt="clone"> 
-<br/><br/>
 
 Делаем резервную копию файла конфигурации keepalived командой `cp /etc/keepalived/keepalived.conf /etc/keepalived/keepalived.conf.bak` и открываем файл конфигурации для редактирования `nano /etc/keepalived/keepalived.conf`.
 Копируем туда конфигурацию для keepalived.
